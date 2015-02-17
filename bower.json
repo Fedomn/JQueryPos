@@ -1,8 +1,11 @@
 {
-  "name": "jquerypos",
+  "name": "pos-web",
   "private": true,
   "dependencies": {
-    "bootstrap-sass-official": "~3.2.0",
-    "modernizr": "~2.8.2"
-  }
+    "jquery": "~2.1.1",
+    "moment": "~2.8.3",
+    "lodash": "~2.4.1",
+    "bootstrap": "~3.2.0"
+  },
+  "devDependencies": {}
 }
