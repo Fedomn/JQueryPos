@@ -1,5 +1,5 @@
 {
-  "name": "pos-web",
+  "name": "jQueryPos",
   "private": true,
   "dependencies": {
     "jquery": "~2.1.1",
