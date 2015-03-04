@@ -104,5 +104,12 @@ CartCounting.prototype.getStats = function () {
         + '节省:' + this.cartSavedPrice.toFixed(2) + '(元)\n';
 };
 
+CartCounting.getItemTotal = function (item) {
+  if(item.freeFare === 0)
+    return (item.count * item.price - item.freeFare) + '元';
+  return (item.count * item.price - item.freeFare)+'元'+'(原价：'+item.price * item.count+'元)';
+};
 
-
+CartCounting.refreshCart = function () {
+  getLocalCartCount();
+};

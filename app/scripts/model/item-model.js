@@ -1,8 +1,9 @@
-function Item(barcode, name, unit, price) {
+function Item(barcode, name, unit, price, type) {
     this.barcode = barcode;
     this.name = name;
     this.unit = unit;
     this.price = price || 0.00;
+    this.type = type;
     this.count = 0;
     this.promotion = false;
     this.freeCount = 0;
@@ -15,4 +16,10 @@ Item.prototype.setFreeCount = function () {
 
 Item.prototype.setFreeFare = function () {
     this.freeFare = this.freeCount * this.price;
+};
+
+Item.prototype.setFreeDomain = function () {
+    this.promotion = true;
+    this.setFreeCount();
+    this.setFreeFare();
 };

@@ -1,4 +1,5 @@
-function printInventory(inputs) {
-    var c = new CartCounting(loadAllItems(), loadPromotions(), inputs);
-    console.log(c.output());
-}
+$(document).ready(function () {
+  localStorage.getItem('totalCount') || (localStorage.totalCount = JSON.stringify(0));
+  localStorage.getItem('cartItems') || (localStorage.cartItems = JSON.stringify({}));
+  getLocalCartCount();
+});
