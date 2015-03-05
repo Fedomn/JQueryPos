@@ -1,6 +1,6 @@
 //$(document).ready(function () {
 $(function () {
-  getLocalCartCount();
+  refreshLocalCartCount();
   var items = loadAllItems();
   _.forEach(items, function (item) {
     var addBtn = '<button class="btn btn-primary btn-sm">加入购物车</button>';
@@ -25,10 +25,13 @@ $(function () {
     var cartItems = JSON.parse(localStorage.getItem('cartItems'));
     var itemBarcode = $(this).attr("data-barcode");
     _.find(items, function (item) { return item.barcode === itemBarcode; }).count++;
+
     //count promotion item free domain
     var promotions = loadPromotions()[0];
     _.times(promotions.barcodes.length, function (index) {
-      _.find(items, function(item){return item.barcode===promotions.barcodes[index]}).setFreeDomain();
+      var promotionItem = _.find(items, function(item){return item.barcode===promotions.barcodes[index]});
+      Item.setFreeDomain(promotionItem);
+      promotionItem.promotion = true;
     });
 
     localStorage.cartItems = JSON.stringify(items);

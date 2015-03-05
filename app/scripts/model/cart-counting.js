@@ -1,115 +1,54 @@
-function CartCounting(items, promotions, inputs) {
-    this.cartItems = [];
-    this.cartTotalPrice = 0;
-    this.cartSavedPrice = 0;
-    this.cartPromotionItemsPrice = 0;
-    this.cartInitialize(items, promotions, inputs);
+function CartCounting() {
 }
 
-CartCounting.prototype.cartInitialize = function (items, promotions, inputs) {
-    this.itemsInitialize(inputs, items, promotions);
-    this.promotionsInitialize();
+CartCounting.getGiftItems = function (cartItems) {
+  return _.filter(cartItems, function (item) {
+    return item.freeCount != 0;
+  });
 };
 
-
-CartCounting.prototype.itemsInitialize = function (inputs, items, promotions) {
-    var cartItems = this.cartItems;
-    var group = _.groupBy(inputs);
-    var map = _.map(group, function (value, key) {
-        return {
-            'barcode': key.slice(0, 10),
-            'count': key.length == 10 ? value.length : key.slice(11)
-        };
-    });
-    _.times(map.length, function (i) {
-        var newItem = _.find(items, function (item) {
-            return item.barcode === map[i].barcode;
-        });
-        if (newItem) {
-            var good = new Item(newItem.barcode, newItem.name, newItem.unit, newItem.price);
-            good.count = map[i].count;
-            cartItems.push(good);
-        }
-    });
-    _.times(cartItems.length, function (index) {
-        if (_.find(promotions[0].barcodes, function (i) {
-                return cartItems[index].barcode === i;
-            })) {
-            cartItems[index].promotion = true;
-            cartItems[index].setFreeCount();
-            cartItems[index].setFreeFare();
-        }
-    });
-};
-
-CartCounting.prototype.promotionsInitialize = function () {
-
-};
-
-
-CartCounting.prototype.output = function () {
-    return '***<没钱赚商店>购物清单***\n' +
-        '打印时间:' + this.getDateTime() + '\n' +
-        '----------------------\n' +
-        this.getBoughtItemsListStr() +
-        '----------------------\n' +
-        '挥泪赠送商品:\n' +
-        this.getFreeItemsListStr() +
-        '----------------------\n' +
-        this.getStats() +
-        '**********************';
-};
-
-CartCounting.prototype.getDateTime = function () {
-    return moment().format('YYYY年MM月DD日 HH:mm:ss');
-};
-
-CartCounting.prototype.getBoughtItemsListStr = function () {
-    var boughtListStr = '';
-    _.forEach(this.cartItems, function (item) {
-        boughtListStr += '名称:' + item.name +
-        ',数量:' + item.count + item.unit +
-        ',单价:' + item.price.toFixed(2) +
-        '(元),小计:' + (item.count * item.price - item.freeFare).toFixed(2) + '(元)\n';
-    });
-    return boughtListStr;
-};
-
-CartCounting.prototype.getFreeItemsListStr = function () {
-    var freeListStr = '';
-    var freeList = this.getFreeItemsList();
-    _.forEach(freeList, function (item) {
-        freeListStr += '名称:' + item.name +
-        ',数量:' + item.freeCount + item.unit + '\n';
-    });
-    return freeListStr;
-};
-
-CartCounting.prototype.getFreeItemsList = function () {
-    return _.filter(this.cartItems, function (item) {
-        return item.promotion === true;
-    });
-};
-
-CartCounting.prototype.getStats = function () {
-    this.cartTotalPrice = _.reduce(this.cartItems, function (sum, item) {
-        return sum + item.count * item.price - item.freeFare;
-    }, 0, this);
-
-    this.cartSavedPrice = _.reduce(this.getFreeItemsList(), function (sum, item) {
-        return sum + item.freeCount * item.price;
-    }, 0, this);
-
-    return '总计:' + this.cartTotalPrice.toFixed(2) + '(元)\n'
-        + '节省:' + this.cartSavedPrice.toFixed(2) + '(元)\n';
-};
 
 CartCounting.getItemTotal = function (item) {
-  if(item.freeFare === 0)
+  if(item.freeFare == 0)
     return (item.count * item.price - item.freeFare) + '元';
   return (item.count * item.price - item.freeFare)+'元'+'(原价：'+item.price * item.count+'元)';
 };
 
-CartCounting.refreshCart = function () {
-  getLocalCartCount();
+CartCounting.getCartTotal = function (cartItems) {
+  return _.reduce(cartItems, function (sum, item) {
+    return sum + item.count * item.price - item.freeFare;
+  }, 0, this);
+};
+
+CartCounting.getGiftTotal = function (gitfItems) {
+  return _.reduce(gitfItems, function (sum, item) {
+    return sum + item.freeFare;
+  }, 0, this);
+};
+
+CartCounting.refreshCartView = function (itemView, itemName) {
+  //refresh cart count
+  refreshLocalCartCount();
+
+  //refresh total price
+  var cartItems = JSON.parse(localStorage.cartItems);
+  $("#cart-total").text(CartCounting.getCartTotal(cartItems)+"元");
+
+  //refresh small total price
+  if(itemView){
+    var item = _.find(cartItems, function (item) {return item.name === itemName});
+    itemView.find(".item-total").text(CartCounting.getItemTotal(item));
+  }
+
+};
+
+CartCounting.refreshLocalStorage = function (itemName, btnType) {
+  var totalCount = parseInt(localStorage.totalCount);
+  var cartItems = JSON.parse(localStorage.cartItems);
+  var item = _.find(cartItems, function (item) {return item.name === itemName});
+  if(btnType === "add"){item.count++; totalCount++;}
+  if(btnType === "minus"){item.count--;totalCount--;}
+  if(item.promotion == true){Item.setFreeDomain(item);}
+  localStorage.totalCount = totalCount;
+  localStorage.cartItems = JSON.stringify(cartItems);
 };

@@ -44,8 +44,7 @@
 
   <div class="container">
     <div class="panel panel-default">
-      <div class="panel-heading"><h4>购物清单</h4></div>
-      <span id="pay_date"></span>
+      <div class="panel-heading"><h4>购物清单</h4><span id="pay-date"></span></div>
       <div class="panel-body">
         <table class="table table-bordered">
           <thead>
@@ -81,15 +80,21 @@
       </div>
 
       <div class="side-space text-right">
-        <p>总计：<span id="total">0.00元</span></p>
-        <p>节约：<span id="gift_prices">0.00元</span></p>
-        <a class="btn btn-primary vertical-space" id="confirm" href="./item.html">确认</a>
+        <p>总计：<span id="cart-total">0.00元</span></p>
+        <p>节约：<span id="gift-total">0.00元</span></p>
+        <a class="btn btn-primary vertical-space" id="cart-confirm" href="../index.html">确认</a>
       </div>
     </div>
   </div>
 
-
   <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
   <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="../scripts/payment-to-html.js"></script>
+  <script src="../scripts/model/cart-counting.js"></script>
+  <script src="../scripts/model/item-model.js"></script>
+  <script src="../scripts/model/promotion-model.js"></script>
+  <script src="../scripts/fixtures.js"></script>
+  <script src="../../bower_components/moment/moment.js"></script>
+  <script src="../../bower_components/lodash/dist/lodash.compat.js"></script>
 </body>
 </html>

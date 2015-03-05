@@ -10,16 +10,15 @@ function Item(barcode, name, unit, price, type) {
     this.freeFare = 0;
 }
 
-Item.prototype.setFreeCount = function () {
-    this.freeCount = Math.floor(this.count / 3);
+Item.setFreeCount = function (item) {
+  item.freeCount = Math.floor(item.count / 3);
 };
 
-Item.prototype.setFreeFare = function () {
-    this.freeFare = this.freeCount * this.price;
+Item.setFreeFare = function (item) {
+  item.freeFare = item.freeCount * item.price;
 };
 
-Item.prototype.setFreeDomain = function () {
-    this.promotion = true;
-    this.setFreeCount();
-    this.setFreeFare();
+Item.setFreeDomain = function (item) {
+    this.setFreeCount(item);
+    this.setFreeFare(item);
 };

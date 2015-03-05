@@ -19,7 +19,7 @@ function loadPromotions() {
     ]
 }
 
-function getLocalCartCount() {
+function refreshLocalCartCount() {
     var totalCount = parseInt(localStorage.getItem('totalCount'));
     $("#cart-count").text(totalCount);
 }
